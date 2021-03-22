@@ -1,4 +1,7 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
+import 'HomePage.dart';
 
 class LoginRegisterPage extends StatefulWidget {
   State<StatefulWidget> createState() {
@@ -126,7 +129,17 @@ class _LoginRegisterState extends State<LoginRegisterPage> {
           ),
           textColor: Colors.white,
           color: Colors.pink,
-          onPressed: validateAndSave,
+          //onPressed: validateAndSave,
+
+          // for temporary mapping later On Replace with above OnPressed.
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => HomePage(),
+              ),
+            );
+          },
         ),
         new FlatButton(
           child: new Text(

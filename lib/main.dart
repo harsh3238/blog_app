@@ -14,7 +14,7 @@ class BlogApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.pink,
       ),
-      home: HomePage(),
+      home: LoginRegisterPage(),
     );
   }
 }
