@@ -1,7 +1,16 @@
+import 'Authentication.dart';
 import 'package:flutter/material.dart';
 import 'HomePage.dart';
 
 class LoginRegisterPage extends StatefulWidget {
+  LoginRegisterPage({
+    this.auth,
+    this.onSignedIn,
+  });
+
+  final AuthImplementation auth;
+  final VoidCallback onSignedIn;
+
   State<StatefulWidget> createState() {
     return _LoginRegisterState();
   }
@@ -25,6 +34,18 @@ class _LoginRegisterState extends State<LoginRegisterPage> {
     } else {
       return false;
     }
+  }
+
+  void validateAndSubmit() async {
+    if (validateAndSave())
+      try {
+        if (_formType == FormType.login) {
+          String userId = await widget.auth.signIn(_email, _password);
+        } else {
+          String userId = await widget.auth.signUp(_email, _password);
+        }
+        widget.onSignedIn();
+      } catch (e) {}
   }
 
   void moveToRegister() {
@@ -127,17 +148,7 @@ class _LoginRegisterState extends State<LoginRegisterPage> {
           ),
           textColor: Colors.white,
           color: Colors.pink,
-          //onPressed: validateAndSave,
-
-          // for temporary mapping later On Replace with above OnPressed.
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => HomePage(),
-              ),
-            );
-          },
+          onPressed: validateAndSubmit,
         ),
         new FlatButton(
           child: new Text(
@@ -157,7 +168,7 @@ class _LoginRegisterState extends State<LoginRegisterPage> {
           ),
           textColor: Colors.white,
           color: Colors.pink,
-          onPressed: validateAndSave,
+          onPressed: validateAndSubmit,
         ),
         new FlatButton(
           child: new Text(
