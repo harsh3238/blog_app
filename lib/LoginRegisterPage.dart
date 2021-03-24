@@ -1,6 +1,6 @@
 import 'Authentication.dart';
 import 'package:flutter/material.dart';
-import 'HomePage.dart';
+import 'DialogBox.dart';
 
 class LoginRegisterPage extends StatefulWidget {
   LoginRegisterPage({
@@ -19,6 +19,8 @@ class LoginRegisterPage extends StatefulWidget {
 enum FormType { login, register }
 
 class _LoginRegisterState extends State<LoginRegisterPage> {
+  DialogBox dialogBox = new DialogBox();
+
   final formKey = new GlobalKey<FormState>();
   FormType _formType = FormType.login;
   String _email = "";
@@ -37,15 +39,25 @@ class _LoginRegisterState extends State<LoginRegisterPage> {
   }
 
   void validateAndSubmit() async {
-    if (validateAndSave())
+    if (validateAndSave()) {
       try {
         if (_formType == FormType.login) {
           String userId = await widget.auth.signIn(_email, _password);
+          /*dialogBox.information(
+              context, "Congratulations", "You are logged in successfully.");*/
+          print("login UserId = " + userId);
         } else {
           String userId = await widget.auth.signUp(_email, _password);
+          /* dialogBox.information(context, "Congratulations",
+              "Your Account has been created successfully.");*/
+          print("login UserId = " + userId);
         }
         widget.onSignedIn();
-      } catch (e) {}
+      } catch (e) {
+        dialogBox.information(context, "Error", e.toString());
+        print("Error = " + e.toString());
+      }
+    }
   }
 
   void moveToRegister() {
@@ -133,7 +145,7 @@ class _LoginRegisterState extends State<LoginRegisterPage> {
       child: new CircleAvatar(
         backgroundColor: Colors.transparent,
         radius: 50.0,
-        child: Image.asset('assets/images/Blog.PNG'),
+        child: Image.asset('assets/images/Blog.png'),
       ),
     );
   }
@@ -141,6 +153,7 @@ class _LoginRegisterState extends State<LoginRegisterPage> {
   List<Widget> createButtons() {
     if (_formType == FormType.login) {
       return [
+        // ignore: deprecated_member_use
         new RaisedButton(
           child: new Text(
             "Login",
@@ -150,6 +163,7 @@ class _LoginRegisterState extends State<LoginRegisterPage> {
           color: Colors.pink,
           onPressed: validateAndSubmit,
         ),
+        // ignore: deprecated_member_use
         new FlatButton(
           child: new Text(
             "Not have an Account? Create Account",
@@ -161,6 +175,7 @@ class _LoginRegisterState extends State<LoginRegisterPage> {
       ];
     } else {
       return [
+        // ignore: deprecated_member_use
         new RaisedButton(
           child: new Text(
             "Create Account",
@@ -170,6 +185,7 @@ class _LoginRegisterState extends State<LoginRegisterPage> {
           color: Colors.pink,
           onPressed: validateAndSubmit,
         ),
+        // ignore: deprecated_member_use
         new FlatButton(
           child: new Text(
             "Already have an Account? Login",

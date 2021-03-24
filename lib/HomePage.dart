@@ -18,7 +18,14 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   //Method Logout
 
-  void logoutUser() {}
+  void _logoutUser() async {
+    try {
+      await widget.auth.signOut();
+      widget.onSignedOut();
+    } catch (e) {
+      print(e.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +52,8 @@ class _HomePageState extends State<HomePage> {
                 icon: new Icon(Icons.logout),
                 iconSize: 40,
                 color: Colors.white,
-                onPressed: () {}, //later replace this with logoutUser Method
+                onPressed:
+                    _logoutUser, //later replace this with logoutUser Method
               ),
               new IconButton(
                 icon: new Icon(Icons.add_a_photo),
