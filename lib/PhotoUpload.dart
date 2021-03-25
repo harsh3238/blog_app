@@ -1,5 +1,8 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
 
 class UploadPhotoPage extends StatefulWidget {
@@ -11,7 +14,7 @@ class UploadPhotoPage extends StatefulWidget {
 
 class _UploadPhotoPageState extends State<UploadPhotoPage> {
   File sampleImage;
-
+  String url;
   String _myValue;
 
   final formKey = new GlobalKey<FormState>();
@@ -35,6 +38,30 @@ class _UploadPhotoPageState extends State<UploadPhotoPage> {
     }
   }
 
+  void uploadStatusImage() async {
+    if (validateAndSave()) {
+      final StorageReference postImageRef =
+          FirebaseStorage.instance.ref().child("Post Images");
+
+      var timeKey = new DateTime.now();
+
+      final StorageUploadTask uploadTask =
+          postImageRef.child(timeKey.toString() + ".jpg").putFile(sampleImage);
+
+      var ImageUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
+
+      url = ImageUrl.toString();
+
+      print("Image Url =" + url);
+
+      saveToDatabase(url);
+    }
+  }
+
+  void saveToDatabase(url) 
+  {
+    
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,7 +107,7 @@ class _UploadPhotoPageState extends State<UploadPhotoPage> {
               child: Text("Add a New Post"),
               textColor: Colors.white,
               color: Colors.pink,
-              onPressed: validateAndSave,
+              onPressed: uploadStatusImage,
             ),
           ],
         ),
